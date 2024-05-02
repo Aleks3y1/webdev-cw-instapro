@@ -1,10 +1,10 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-import {getToken} from "./index.js";
+import { getToken, user } from "./index.js";
 
 const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
-const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -71,7 +71,7 @@ export function uploadImage({ file }) {
   });
 }
 
-export function onAddPostClick( {description, imageUrl, token}) {
+export function onAddPostClick({ description, imageUrl, token }) {
   return fetch(postsHost, {
     method: "POST",
     headers: {
@@ -86,8 +86,30 @@ export function onAddPostClick( {description, imageUrl, token}) {
       throw new Error("Нет авторизации");
     }
     if (response.status === 400) {
-      throw new Error("Ошибка при добавлении поста. Проверьте фото и описание к нему!");
+      throw new Error(
+        "Ошибка при добавлении поста. Проверьте фото и описание к нему!"
+      );
     }
     return response.json();
   });
+}
+
+export function getUserComments({ user, token }) {
+  return fetch(`${postsHost}/user-posts/${user}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((response) => {
+      return response.posts;
+    }
+  );
 }
