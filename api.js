@@ -80,6 +80,7 @@ export function onAddPostClick({ description, imageUrl, token }) {
     body: JSON.stringify({
       description,
       imageUrl,
+      isLiked: false,
     }),
   }).then((response) => {
     if (response.status === 401) {
@@ -110,6 +111,25 @@ export function getUserComments({ user, token }) {
     })
     .then((response) => {
       return response.posts;
-    }
-  );
+    });
+}
+
+export function likesApi({ likeId, token, activityLike }) {
+  return fetch (
+      (!activityLike ? postsHost + '/' + likeId + '/like' : postsHost + '/' + likeId + '/dislike'), {
+        method: "POST",
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        if (response.status === 401) {
+          throw new Error("Нет авторизации");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        return data.post;
+      });
 }

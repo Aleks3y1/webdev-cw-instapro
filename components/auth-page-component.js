@@ -1,6 +1,8 @@
 import { loginUser, registerUser } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import {saveCodeOnError} from "../helpers.js";
+
 
 export function renderAuthPageComponent({ appEl, setUser }) {
   let isLoginMode = true;
@@ -79,8 +81,10 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       setError("");
 
       if (isLoginMode) {
-        const login = document.getElementById("login-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = saveCodeOnError(document.getElementById("login-input").value);
+        const password = saveCodeOnError(
+          document.getElementById("password-input").value
+        );
 
         if (!login) {
           alert("Введите логин");
@@ -104,9 +108,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setError(error.message);
           });
       } else {
-        const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = saveCodeOnError(document.getElementById("login-input").value);
+        const name = saveCodeOnError(document.getElementById("name-input").value);
+        const password = saveCodeOnError(
+          document.getElementById("password-input").value
+        );
         if (!name) {
           alert("Введите имя");
           return;
