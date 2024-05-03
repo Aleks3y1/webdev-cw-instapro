@@ -1,8 +1,10 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
+import { getToken, user } from "./index.js";
+
 const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
-const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -67,4 +69,67 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+
+export function onAddPostClick({ description, imageUrl, token }) {
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+      isLiked: false,
+    }),
+  }).then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
+    if (response.status === 400) {
+      throw new Error(
+        "Ошибка при добавлении поста. Проверьте фото и описание к нему!"
+      );
+    }
+    return response.json();
+  });
+}
+
+export function getUserComments({ user, token }) {
+  return fetch(`${postsHost}/user-posts/${user}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((response) => {
+      return response.posts;
+    });
+}
+
+export function likesApi({ likeId, token, activityLike }) {
+  return fetch (
+      (!activityLike ? postsHost + '/' + likeId + '/like' : postsHost + '/' + likeId + '/dislike'), {
+        method: "POST",
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        if (response.status === 401) {
+          throw new Error("Нет авторизации");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        return data.post;
+      });
 }
