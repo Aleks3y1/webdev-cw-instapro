@@ -1,10 +1,10 @@
-import {renderHeaderComponent} from "./header-component.js";
-import {renderUploadImageComponent} from "./upload-image-component.js";
+import { renderHeaderComponent } from "./header-component.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
 import { onAddPostClick } from "../api.js";
-import {getToken, goToPage, user} from "../index.js";
-import {POSTS_PAGE} from "../routes.js";
+import { getToken, goToPage, user } from "../index.js";
+import { POSTS_PAGE } from "../routes.js";
 
-let imageUrl = '';
+let imageUrl = "";
 
 export function renderAddPostPageComponent({ appEl }) {
   const render = () => {
@@ -44,17 +44,19 @@ export function renderAddPostPageComponent({ appEl }) {
 
     document.getElementById("add-button").addEventListener("click", () => {
       const description = document.querySelector(".input.textarea").value;
-      onAddPostClick({
-        description,
-        imageUrl,
-        token: getToken(),
-      }).then(() => {
-        goToPage(POSTS_PAGE);
-      });
+      if (navigator.onLine) {
+        onAddPostClick({
+          description,
+          imageUrl,
+          token: getToken(),
+        }).then(() => {
+          goToPage(POSTS_PAGE);
+        });
+      } else {
+        alert("Отсутствует подключение к интернету.");
+      }
     });
   };
 
   render();
 }
-
-

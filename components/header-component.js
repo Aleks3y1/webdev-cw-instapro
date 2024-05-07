@@ -32,7 +32,11 @@ export function renderHeaderComponent({ element }) {
     });
 
   element.querySelector(".logo").addEventListener("click", () => {
-    goToPage(POSTS_PAGE);
+    if (navigator.onLine) {
+      goToPage(POSTS_PAGE);
+    } else {
+      alert("Отсутствует подключение к интернету");
+    }
   });
 
   element.querySelector(".logout-button")?.addEventListener("click", logout);
