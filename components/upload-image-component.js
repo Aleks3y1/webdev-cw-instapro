@@ -1,4 +1,5 @@
 import { uploadImage } from "../api.js";
+import {setUploadImage} from "./header-component.js";
 
 export function renderUploadImageComponent({ element, onImageUrlChange }) {
   let imageUrl = "";
@@ -33,6 +34,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
 
     fileInputElement?.addEventListener("change", () => {
       if (navigator.onLine) {
+        imageUrl = '';
         const file = fileInputElement.files[0];
         if (file) {
           const lableEl = document.querySelector(".file-upload-label");
@@ -42,6 +44,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
             imageUrl = fileUrl;
             onImageUrlChange(imageUrl);
             render();
+            setUploadImage(true);
           });
         }
       } else {

@@ -3,14 +3,9 @@ import { renderHeaderComponent } from "./header-component.js";
 import {
   posts,
   goToPage,
-  getToken,
-  userPosts,
-  user,
   userIdInClick,
-  userName,
 } from "../index.js";
-import { likesApi } from "../api.js";
-import { userLike, saveCodeOnError } from "../helpers.js";
+import { userLike } from "../helpers.js";
 import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 
